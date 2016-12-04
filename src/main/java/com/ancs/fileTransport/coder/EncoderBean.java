@@ -10,13 +10,11 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 public class EncoderBean extends MessageToByteEncoder<FilePackageBean>{
 
-	 
+	
 	@Override
-	protected void encode(ChannelHandlerContext ctx, FilePackageBean msg, ByteBuf out) throws Exception {
+	protected void encode(ChannelHandlerContext ctx, FilePackageBean msg, ByteBuf bt) throws Exception {
 		// TODO Auto-generated method stub
 		
-		int size = 60 + msg.getCsize();
-		ByteBuf bt = ctx.alloc().buffer(size);
 		bt.writeByte(msg.getType().getByteValue());
 		bt.writeByte(msg.getStatus().getByteValue());
 		bt.writeInt(msg.getTotal());

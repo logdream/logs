@@ -17,6 +17,7 @@ public class DecoderBean extends ReplayingDecoder<DecodingState>{
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println(333111111);
 		switch(state()){
 		case TYPE:
 			if(null==bean)

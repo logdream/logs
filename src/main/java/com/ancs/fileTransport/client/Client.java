@@ -1,5 +1,6 @@
 package com.ancs.fileTransport.client;
 
+import com.ancs.fileTransport.beans.FilePackageBean;
 import com.ancs.fileTransport.coder.EncoderBean;
 
 import io.netty.bootstrap.Bootstrap;
@@ -30,6 +31,9 @@ public class Client {
 
 			ChannelFuture f = b.connect(host, port).sync();
 			f.channel().closeFuture().sync();
+			FilePackageBean bean = new FilePackageBean(1, 1, "hello world".getBytes());
+			f.channel().writeAndFlush(bean);
+			
 		} finally {
 			workerGroup.shutdownGracefully();
 		}
