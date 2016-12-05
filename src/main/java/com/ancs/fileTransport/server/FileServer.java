@@ -1,8 +1,6 @@
 package com.ancs.fileTransport.server;
 
 
-import org.apache.logging.log4j.simple.SimpleLogger;
-
 import com.ancs.fileTransport.coder.DecoderBean;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -13,6 +11,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 public class FileServer {
 	public void start(int port) throws Exception {
@@ -22,6 +22,7 @@ public class FileServer {
 		try {
 			ServerBootstrap b = new ServerBootstrap(); 
 			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class) 
+			.handler(new LoggingHandler(LogLevel.INFO))
 					.childHandler(new ChannelInitializer<SocketChannel>() { 
 								@Override
 								public void initChannel(SocketChannel ch) throws Exception {
@@ -31,7 +32,7 @@ public class FileServer {
 							})
 					
 					.childOption(ChannelOption.SO_KEEPALIVE, true); 
-
+			
 			ChannelFuture f = b.bind(port).sync(); 
 
 			f.channel().closeFuture().sync();

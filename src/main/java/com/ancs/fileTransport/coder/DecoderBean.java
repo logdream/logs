@@ -13,6 +13,11 @@ import io.netty.handler.codec.ReplayingDecoder;
 
 public class DecoderBean extends ReplayingDecoder<DecodingState>{
 
+	
+	public DecoderBean() {
+		super(DecodingState.TYPE);
+		// TODO Auto-generated constructor stub
+	}
 	private FilePackageBean bean;
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
@@ -26,7 +31,10 @@ public class DecoderBean extends ReplayingDecoder<DecodingState>{
 			checkpoint(DecodingState.STATUS);
 		case STATUS:
 			bean.setStatus(STATUS.fromByte(in.readByte()));
-			checkpoint(DecodingState.TOTAL);
+			checkpoint(DecodingState.FILESIZE);
+		case FILESIZE:
+			bean.setFileSize(in.readLong());
+			checkpoint(DecodingState.TOTAL);	
 		case TOTAL:
 			bean.setTotal(in.readInt());
 			checkpoint(DecodingState.INDEX);
@@ -34,14 +42,25 @@ public class DecoderBean extends ReplayingDecoder<DecodingState>{
 			bean.setIndex(in.readInt());
 			checkpoint(DecodingState.UUID);
 		case UUID:
-			bean.setUuid(in.readBytes(32).array()
-					.toString());
+			byte[] dest = new byte[32];
+			in.readBytes(dest);
+			bean.setUuid(new String(dest));
+			checkpoint(DecodingState.NAMESIZE);
+		case NAMESIZE:
+			bean.setNameSize(in.readInt());
+			checkpoint(DecodingState.FILENAME);
+		case FILENAME:
+			byte[] fileName = new byte[bean.getNameSize()];
+			in.readBytes(fileName);
+			bean.setFileName(new String(fileName));
 			checkpoint(DecodingState.CSIZE);
 		case CSIZE:
 			bean.setCsize(in.readInt());
 			checkpoint(DecodingState.CONTENT);
 		case CONTENT:
-			bean.setContent(in.readBytes(bean.getCsize()).array());
+			byte[] dest1 = new byte[bean.getCsize()];
+			in.readBytes(dest1);
+			bean.setContent(dest1);
 			out.add(bean);
 			checkpoint(DecodingState.TYPE);
 			break;

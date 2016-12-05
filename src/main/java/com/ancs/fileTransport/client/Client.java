@@ -1,6 +1,5 @@
 package com.ancs.fileTransport.client;
 
-import com.ancs.fileTransport.beans.FilePackageBean;
 import com.ancs.fileTransport.coder.EncoderBean;
 
 import io.netty.bootstrap.Bootstrap;
@@ -11,6 +10,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 public class Client {
 	public void connect(String host, int port) throws Exception {
@@ -19,7 +20,7 @@ public class Client {
 		try {
 			Bootstrap b = new Bootstrap(); 
 			b.group(workerGroup); 
-			b.channel(NioSocketChannel.class); 
+			b.channel(NioSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO)); 
 			b.option(ChannelOption.SO_KEEPALIVE, true); 
 			b.handler(new ChannelInitializer<SocketChannel>() {
 				@Override
@@ -31,8 +32,7 @@ public class Client {
 
 			ChannelFuture f = b.connect(host, port).sync();
 			f.channel().closeFuture().sync();
-			FilePackageBean bean = new FilePackageBean(1, 1, "hello world".getBytes());
-			f.channel().writeAndFlush(bean);
+			
 			
 		} finally {
 			workerGroup.shutdownGracefully();
