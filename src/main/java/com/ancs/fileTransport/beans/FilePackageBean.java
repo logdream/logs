@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.UUID;
 
-public class FilePackageBean {
+public class FilePackageBean implements Cloneable {
 	private TYPE type; // 1
 	private STATUS status; // 1
 	private Long fileSize;
@@ -135,33 +134,30 @@ public class FilePackageBean {
 	}
 
 	// 通过文件初始化
-	private final static Integer partSize = 1024 *1024*2 - 60;// 分块大小；
-	private File file;
+	private final static Integer partSize = 1024*1023*30 - 60;// 分块大小；
 	private InputStream in = null;
 
 	public FilePackageBean(File file) throws IOException {
-		this.file = file;
 		this.fileName = file.getName();
 		this.fileSize = file.length();
 		this.nameSize = file.getName().getBytes().length;
 		this.total = Integer.parseInt((file.length() / partSize + 1) + "");
 		this.index = -1;
 		this.uuid = UUID.randomUUID().toString().replace("-", "");
-		this.csize =0;
+		this.csize = 0;
 		this.in = new FileInputStream(file);
 	}
-	
-	public boolean hasNext(){
-		return this.index+1<this.total;
+
+	public boolean hasNext() {
+		return this.index + 1 < this.total;
 	}
 
-	public FilePackageBean next() throws IOException{
-		this.index =this.index +1;
-		Long offset = csize+1L*this.index*partSize;
-		if(this.total==this.index+1){
-			this.csize = Integer.parseInt((this.fileSize -1L*(this.index)*partSize)+"");
-		}
-		else{
+	public FilePackageBean next() throws IOException, CloneNotSupportedException {
+		this.index = this.index + 1;
+		Long offset = csize + 1L * this.index * partSize;
+		if (this.total == this.index + 1) {
+			this.csize = Integer.parseInt((this.fileSize - 1L * (this.index) * partSize) + "");
+		} else {
 			this.csize = partSize;
 		}
 		this.content = null;
@@ -169,12 +165,14 @@ public class FilePackageBean {
 		System.out.println(offset);
 		in.skip(offset);
 		in.read(this.content, 0, this.csize);
-		if(this.total==this.index+1)
+		if (this.total == this.index + 1)
 			close();
-		return this;
-		
+		FilePackageBean filePackageBean = (FilePackageBean) this.clone();
+
+		return filePackageBean;
+
 	}
-	
+
 	public void close() {
 		if (null != in) {
 			try {
@@ -189,16 +187,16 @@ public class FilePackageBean {
 	public String toString() {
 		return "FilePackageBean [type=" + type + ", status=" + status + ", fileSize=" + fileSize + ", uuid=" + uuid
 				+ ", total=" + total + ", index=" + index + ", nameSize=" + nameSize + ", fileName=" + fileName
-				+ ", csize=" + csize +"]";
+				+ ", csize=" + csize + "]";
 	}
 
-	public static void main(String args[]) throws IOException{
-		FilePackageBean packageBean = new FilePackageBean(new File("/Users/log/Desktop/catalina.out"));
-		while (packageBean.hasNext()) {
-			FilePackageBean bean = packageBean.next();
-			System.out.println(bean);
-			System.out.println(bean.getTotal());
-			
+	public Object clone() {
+		FilePackageBean o = null;
+		try {
+			o = (FilePackageBean) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
 		}
+		return o;
 	}
 }

@@ -10,16 +10,18 @@ import com.ancs.fileTransport.beans.FilePackageBean;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.internal.logging.InternalLogger;
+import io.netty.util.internal.logging.InternalLoggerFactory;
 
 public class BusinessHandler extends ChannelInboundHandlerAdapter {
-
-	final static String temp = "/Users/log/Desktop/test";
+	private static final InternalLogger logger =
+            InternalLoggerFactory.getInstance(BusinessHandler.class);
+	final static String temp = "/Volumes/EFI/test";
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		System.out.println(System.currentTimeMillis());
 		FilePackageBean bean = (FilePackageBean)msg;
-		
+		logger.info(bean.getFileName()+":"+bean.getIndex());
 		File dir = new File(temp+File.separator+bean.getUuid());
 		if(!dir.exists()){
 			dir.mkdirs();
@@ -30,6 +32,10 @@ public class BusinessHandler extends ChannelInboundHandlerAdapter {
 		IOUtils.write(bean.getContent(), outputStream);
 		System.out.println(System.currentTimeMillis());
 	}
+	@Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
 	@Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
             throws Exception {

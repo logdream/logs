@@ -1,14 +1,10 @@
 package com.ancs.fileTransport.client;
 
-import com.ancs.fileTransport.coder.EncoderBean;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
@@ -22,14 +18,7 @@ public class Client {
 			b.group(workerGroup); 
 			b.channel(NioSocketChannel.class).handler(new LoggingHandler(LogLevel.INFO)); 
 			b.option(ChannelOption.SO_KEEPALIVE, true); 
-			b.handler(new ChannelInitializer<SocketChannel>() {
-				@Override
-				public void initChannel(SocketChannel ch) throws Exception {
-					ch.pipeline().addLast(new EncoderBean());
-					ch.pipeline().addLast(new ClientInitHandler());
-				}
-			});
-
+			b.handler(new ClientInitializer());
 			ChannelFuture f = b.connect(host, port).sync();
 			f.channel().closeFuture().sync();
 			

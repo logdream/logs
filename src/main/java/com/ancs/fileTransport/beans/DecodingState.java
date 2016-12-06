@@ -12,11 +12,11 @@ package com.ancs.fileTransport.beans;
  *
  */
 public enum DecodingState {
+	INDEX,
     TYPE,
     STATUS,
     FILESIZE,
     TOTAL,
-    INDEX,
     UUID,
     NAMESIZE,
     FILENAME,

@@ -13,16 +13,7 @@ public class ClientInitHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		System.out.println(1111111111);
-		File file = new File("/Users/log/Desktop/poi-3.13.jar");
-		FilePackageBean bean = new FilePackageBean(file);
-		while (bean.hasNext()) {
-			FilePackageBean bean2 = bean.next();
-			bean2.setType(TYPE.SEND);
-			bean2.setStatus(STATUS.SUCCESS);
-			ctx.write(bean2);
-			ctx.flush();
-
-		}
-		System.out.println(1111111111);
+		
+		
 	}
 }
