@@ -30,6 +30,8 @@ public class BusinessHandler extends ChannelInboundHandlerAdapter {
 		File file = new File(dir.getAbsolutePath()+File.separator+bean.getIndex()+"_"+bean.getFileName());
 		OutputStream outputStream = new FileOutputStream(file);
 		IOUtils.write(bean.getContent(), outputStream);
+		outputStream.close();
+		bean.setContent(null);
 		System.out.println(System.currentTimeMillis());
 	}
 	@Override
