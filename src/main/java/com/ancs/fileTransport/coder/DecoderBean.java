@@ -1,13 +1,11 @@
 package com.ancs.fileTransport.coder;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.ancs.fileTransport.beans.DecodingState;
 import com.ancs.fileTransport.beans.FilePackageBean;
 import com.ancs.fileTransport.beans.STATUS;
 import com.ancs.fileTransport.beans.TYPE;
-import com.ancs.fileTransport.client.FileClient;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
