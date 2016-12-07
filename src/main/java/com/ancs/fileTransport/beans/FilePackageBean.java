@@ -134,7 +134,7 @@ public class FilePackageBean implements Cloneable {
 	}
 
 	// 通过文件初始化
-	private final static Integer partSize = 1024*1023*30 - 60;// 分块大小；
+	public final static Integer partSize = 1024*30 - 60;// 分块大小；
 	private InputStream in = null;
 
 	public FilePackageBean(File file) throws IOException {
