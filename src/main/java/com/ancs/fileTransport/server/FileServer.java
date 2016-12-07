@@ -2,6 +2,7 @@ package com.ancs.fileTransport.server;
 
 
 import com.ancs.fileTransport.coder.DecoderBean;
+import com.ancs.fileTransport.coder.EncoderBean;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -26,6 +27,7 @@ public class FileServer {
 					.childHandler(new ChannelInitializer<SocketChannel>() { 
 								@Override
 								public void initChannel(SocketChannel ch) throws Exception {
+									ch.pipeline().addLast(new EncoderBean());
 									ch.pipeline().addLast(new DecoderBean());
 									ch.pipeline().addLast(new BusinessHandler());
 								}

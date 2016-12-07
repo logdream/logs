@@ -36,7 +36,7 @@ public class DecoderBean extends ReplayingDecoder<DecodingState> {
 			bean.setIndex(i);
 			checkpoint(DecodingState.TYPE);
 		case TYPE:
-			bean.setType(TYPE.formByte(in.readByte()));
+			bean.setType(TYPE.fromByte(in.readByte()));
 			checkpoint(DecodingState.STATUS);	
 		case STATUS:
 			bean.setStatus(STATUS.fromByte(in.readByte()));

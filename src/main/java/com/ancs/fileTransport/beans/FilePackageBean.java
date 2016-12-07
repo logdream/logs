@@ -1,9 +1,8 @@
 package com.ancs.fileTransport.beans;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.UUID;
 
 public class FilePackageBean implements Cloneable {
@@ -134,8 +133,8 @@ public class FilePackageBean implements Cloneable {
 	}
 
 	// 通过文件初始化
-	public final static Integer partSize = 1024*30 - 60;// 分块大小；
-	private InputStream in = null;
+	public final static Integer partSize =  1024*1024*3;// 分块大小；
+	private RandomAccessFile in= null;
 
 	public FilePackageBean(File file) throws IOException {
 		this.fileName = file.getName();
@@ -145,7 +144,7 @@ public class FilePackageBean implements Cloneable {
 		this.index = -1;
 		this.uuid = UUID.randomUUID().toString().replace("-", "");
 		this.csize = 0;
-		this.in = new FileInputStream(file);
+		this.in = new RandomAccessFile(file,"r");
 	}
 
 	public boolean hasNext() {
@@ -160,15 +159,13 @@ public class FilePackageBean implements Cloneable {
 		} else {
 			this.csize = partSize;
 		}
-		this.content = null;
-		this.content = new byte[this.csize];
+		byte[] dest = new byte[this.csize];
 		System.out.println(offset);
-		in.skip(offset);
-		in.read(this.content, 0, this.csize);
+		in.read(dest);
 		if (this.total == this.index + 1)
 			close();
 		FilePackageBean filePackageBean = (FilePackageBean) this.clone();
-
+		filePackageBean.setContent(dest);
 		return filePackageBean;
 
 	}
@@ -198,5 +195,20 @@ public class FilePackageBean implements Cloneable {
 			e.printStackTrace();
 		}
 		return o;
+	}
+	/**
+	 * 转为接收成功的包
+	 */
+	public void toRecive(){
+		this.type = TYPE.RECIVE;
+		this.csize = 0;
+	}
+	/**
+	 * 专为重发请求包
+	 */
+	public void toResend(){
+		this.type = TYPE.RESEND;
+		this.csize = 0;
+		this.status = STATUS.FAIL;
 	}
 }
