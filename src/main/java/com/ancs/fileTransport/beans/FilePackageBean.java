@@ -153,14 +153,12 @@ public class FilePackageBean implements Cloneable {
 
 	public FilePackageBean next() throws IOException, CloneNotSupportedException {
 		this.index = this.index + 1;
-		Long offset = csize + 1L * this.index * partSize;
 		if (this.total == this.index + 1) {
 			this.csize = Integer.parseInt((this.fileSize - 1L * (this.index) * partSize) + "");
 		} else {
 			this.csize = partSize;
 		}
 		byte[] dest = new byte[this.csize];
-		System.out.println(offset);
 		in.read(dest);
 		if (this.total == this.index + 1)
 			close();
@@ -190,6 +188,7 @@ public class FilePackageBean implements Cloneable {
 	public Object clone() {
 		FilePackageBean o = null;
 		try {
+			
 			o = (FilePackageBean) super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();

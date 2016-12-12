@@ -32,7 +32,6 @@ public class DecoderBean extends ReplayingDecoder<DecodingState> {
 			if (null == bean)
 				bean = new FilePackageBean();
 			int i = in.readInt();
-			logger.info("the index is " + i);
 			bean.setIndex(i);
 			checkpoint(DecodingState.TYPE);
 		case TYPE:
@@ -68,8 +67,9 @@ public class DecoderBean extends ReplayingDecoder<DecodingState> {
 			in.readBytes(dest1);
 			bean.setContent(dest1);
 			out.add(bean);
+			System.out.println("out size is :"+out.size());
+			logger.info(bean.toString());
 			checkpoint(DecodingState.INDEX);
-			dest1 = null;
 			break;
 		default:
 			throw new Error("wtf");

@@ -37,10 +37,6 @@ public class FileToPackage {
 		System.out.println(Long.MAX_VALUE/partSize);
 		System.out.println(Integer.MAX_VALUE);
 		System.out.println(Long.MAX_VALUE/Integer.MAX_VALUE/1024/1024);
-		File file = new File("/Users/log/Documents/vm/xubuntu.vhd");
-		System.out.println(file.length());
-		FileToPackage fileToPackage = new FileToPackage(file);
-		System.out.println(fileToPackage.toString());
 	}
 	
 	

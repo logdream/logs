@@ -1,8 +1,6 @@
 package com.ancs.fileTransport.client;
 
 import com.ancs.fileTransport.beans.FilePackageBean;
-import com.ancs.fileTransport.server.FileOutThread;
-import com.ancs.fileTransport.server.FileOutThreadPool;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

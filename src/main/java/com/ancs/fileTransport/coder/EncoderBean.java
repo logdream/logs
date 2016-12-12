@@ -13,7 +13,6 @@ public class EncoderBean extends MessageToByteEncoder<FilePackageBean>{
 	@Override
 	protected void encode(ChannelHandlerContext ctx, FilePackageBean msg, ByteBuf bt) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println(msg.toString());
 		bt.writeInt(msg.getIndex());
 		bt.writeByte(msg.getType().getByteValue());
 		bt.writeByte(msg.getStatus().getByteValue());
